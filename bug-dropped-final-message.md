@@ -1,7 +1,6 @@
 # Draft: opencode bug — "silent dropped final message" (empty `stop` message, exit 0)
 
-Draft GitHub issue prepared 2026-08-14. Not yet filed (no `gh`/credentials on this machine); paste into
-https://github.com/anomalyco/opencode/issues when ready. Marked `[draft]` in `TASKS.md`.
+**Filed 2026-08-14:** https://github.com/anomalyco/opencode/issues/42677 (this file is the archival copy).
 
 ---
 
