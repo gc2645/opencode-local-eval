@@ -1,0 +1,10 @@
+[Unit]
+Description=Mock service (local-model test)
+After=network.target
+
+[Service]
+ExecStart=/tmp/opencode-local-test/mock-svc.sh
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

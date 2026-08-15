@@ -1,0 +1,11 @@
+# Private project files — never commit these
+AGENTS.md
+TASKS.md
+WORKLOG.md
+RESULTS.md
+config/
+results-*/
+
+# OS / editor
+.DS_Store
+*.swp
