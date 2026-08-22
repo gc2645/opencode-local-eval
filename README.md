@@ -53,11 +53,21 @@ The start script runs the server in the **foreground** (`exec`). Correctly start
 
 ## Findings (2026 campaign summary)
 
-Run across a set of local Ollama models on a two-machine stack (Mac + GPU server) plus a cloud baseline. Findings that survived the campaign:
+Run across local models on a two-machine stack (Mac + LAN GPU server) served by Ollama and llama.cpp, plus a cloud baseline. Findings that survived the campaign:
+
+**Round 1 — small diagnose→fix→verify loop (mock HTTP service):**
 
 - Task competence ≠ speed: the fastest model refused on its first try; the slowest passed.
 - Context quality matters: a better task README flipped one model from outright refusal to a clean PASS.
 - The single biggest differentiator was surviving the background-server hang to emit the final report.
+- Local passers: GLM-4.7-Flash (3m28s), Qwen3.6-27B (4m28s), Qwen3.6-35B-A3B-MTP (~5m), GPT-OSS-20B (7m30s, after one failed attempt). Cloud baseline: 2m38s.
+
+**Round 2 — long-horizon real-infrastructure builds over SSH** (create an unprivileged LXC container to spec, install nginx inside it, prove service-level verification from the host):
+
+- **Round 1 rankings did not transfer.** Qwen3.6-35B-A3B-MTP was the only model that completed builds (2/2 attempts, verified end-to-end; sole defect: never signals session completion and idles until timeout).
+- GPT-OSS-20B failed twice with different failure modes: a hallucinated "no network" refusal without trying once, then answering with a copy-paste recipe instead of acting.
+- GLM-4.7-Flash failed deterministically inside the agent loop while a raw-API probe proved it emits perfectly valid tool calls at identical prompt length — an agent-integration transport bug, not model capability.
+- Meta-lessons: small-loop benchmarks don't predict long-horizon agentic performance; explicit "execute yourself / end when done" instructions matter more as tasks grow; always differential-probe the raw API before concluding a model can't do something.
 
 ## Reproduce from scratch
 
